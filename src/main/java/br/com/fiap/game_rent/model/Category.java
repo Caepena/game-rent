@@ -24,9 +24,12 @@ public class Category {
     public String getIcon() {
         return icon;
     }
+   
     public void setId(Long id){
         this.id = id;
     }
-    
-    
+
+    public String toString() {
+        return id + " - " + name + " - " + icon;
+    }
 }
