@@ -19,6 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import br.com.fiap.game_rent.model.Category;
 import br.com.fiap.game_rent.repository.CategoryRepository;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/categories")
@@ -39,7 +40,7 @@ public class CategoryController {
     // POST
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Category create(@RequestBody Category category) {
+    public Category create(@RequestBody @Valid Category category) {
         log.info("Cadastrando categoria: " + category.getName());
         return repository.save(category);
     }
@@ -61,7 +62,7 @@ public class CategoryController {
 
     // editar categoria @put
     @PutMapping("{id}")
-    public Category update(@PathVariable Long id, @RequestBody Category category) {
+    public Category update(@PathVariable Long id, @RequestBody @Valid Category category) {
         log.info("Atualizando categoria " + id + " " + category);
 
         getCategory(id);
