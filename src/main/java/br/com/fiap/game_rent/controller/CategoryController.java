@@ -31,45 +31,60 @@ public class CategoryController {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    @Autowired // injeção de dependência
+    @Autowired
     private CategoryRepository repository;
 
-    // GETALL
     @GetMapping
     @Cacheable("categories")
-    @Operation(description = "Lista todas as categorias", tags = "categories", summary = "Lista de categorias")
+    @Operation(summary = "Listar todas as categorias", description = "Retorna uma lista com todas as categorias cadastradas no sistema", tags = "categories", responses = {
+            @ApiResponse(responseCode = "200", description = "Lista de categorias retornada com sucesso")
+    })
     public List<Category> index() {
         log.info("Buscando todas categorias");
         return repository.findAll();
     }
 
-    // POST
     @PostMapping
     @CacheEvict(value = "categories", allEntries = true)
     @ResponseStatus(HttpStatus.CREATED)
-    @Operation(responses = { @ApiResponse(responseCode = "400", description = "Falha na validação") })
+    @Operation(summary = "Cadastrar nova categoria", description = "Cria uma nova categoria com os dados informados", tags = "categories", responses = {
+            @ApiResponse(responseCode = "201", description = "Categoria criada com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Falha na validação dos dados")
+    })
     public Category create(@RequestBody @Valid Category category) {
         log.info("Cadastrando categoria: " + category.getName());
         return repository.save(category);
     }
 
-    // GET
     @GetMapping("/{id}")
+    @Operation(summary = "Buscar categoria por ID", description = "Retorna os dados da categoria correspondente ao ID informado", tags = "categories", responses = {
+            @ApiResponse(responseCode = "200", description = "Categoria encontrada"),
+            @ApiResponse(responseCode = "404", description = "Categoria não encontrada")
+    })
     public Category get(@PathVariable Long id) {
         log.info("Buscando categoria... \n" + id);
         return getCategory(id);
     }
 
-    // apagar categoria @delete
     @DeleteMapping("/{id}")
+    @CacheEvict(value = "categories", allEntries = true)
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "Excluir categoria", description = "Remove a categoria com o ID informado", tags = "categories", responses = {
+            @ApiResponse(responseCode = "204", description = "Categoria removida com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Categoria não encontrada")
+    })
     public void destroy(@PathVariable Long id) {
         log.info("Apagando categoria " + id);
         repository.delete(getCategory(id));
-    }
+    }   
 
-    // editar categoria @put
     @PutMapping("{id}")
+    @CacheEvict(value = "categories", allEntries = true)
+    @Operation(summary = "Atualizar categoria", description = "Atualiza os dados da categoria correspondente ao ID informado", tags = "categories", responses = {
+            @ApiResponse(responseCode = "200", description = "Categoria atualizada com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos"),
+            @ApiResponse(responseCode = "404", description = "Categoria não encontrada")
+    })
     public Category update(@PathVariable Long id, @RequestBody @Valid Category category) {
         log.info("Atualizando categoria " + id + " " + category);
 
