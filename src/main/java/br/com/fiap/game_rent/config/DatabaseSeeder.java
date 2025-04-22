@@ -19,8 +19,8 @@ public class DatabaseSeeder {
     public void categorySeed() {
         categoryRepository.saveAll(
                 List.of(
-                        Category.builder().name("Perfil").icon("User").build(),
-                        Category.builder().name("Favoritos").icon("Star").build(),
-                        Category.builder().name("Pagamentos").icon("BanknoteArrowDown").build()));
+                        Category.builder().name("Terror").build(),
+                        Category.builder().name("Corrida").build(),
+                        Category.builder().name("Rogue Like").build()));
     }
 }
