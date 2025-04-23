@@ -1,11 +1,13 @@
 package br.com.fiap.game_rent.controller;
 
-import java.util.List;
-
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +22,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import br.com.fiap.game_rent.model.Category;
 import br.com.fiap.game_rent.repository.CategoryRepository;
+import br.com.fiap.game_rent.specification.CategorySpecification;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
@@ -30,6 +33,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CategoryController {
 
+    public record CategoryFilter(String name){
+    }
+
     @Autowired
     private CategoryRepository repository;
 
@@ -38,9 +44,11 @@ public class CategoryController {
     @Operation(summary = "Listar todas as categorias", description = "Retorna uma lista com todas as categorias cadastradas no sistema", tags = "categories", responses = {
             @ApiResponse(responseCode = "200", description = "Lista de categorias retornada com sucesso")
     })
-    public List<Category> index() {
-        log.info("Buscando todas categorias");
-        return repository.findAll();
+    public Page<Category> index(CategoryFilter filter,
+        @PageableDefault(size = 10, sort = "name", direction = Direction.DESC) Pageable pageable) {
+        log.info("Listando categorias... \n" + pageable);
+        var specification = CategorySpecification.withFilters(filter);
+        return repository.findAll(specification, pageable);
     }
 
     @PostMapping

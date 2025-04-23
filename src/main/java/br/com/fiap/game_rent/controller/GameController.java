@@ -53,19 +53,28 @@ public class GameController {
     @CacheEvict(value = "games", allEntries = true)
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(responses = {
-            @ApiResponse(responseCode = "400", description = "Invalid game data")
+            @ApiResponse(responseCode = "400", description = "Invalid game data"),
+            @ApiResponse(responseCode = "201", description = "Game created successfully")
     })
     public Game create(@RequestBody @Valid Game game) {
         log.info("Criando game: " + game.getName());
         return repository.save(game);
     }
 
+    @Operation(summary = "Busca um game pelo ID", description = "Retorna um game com o ID informado", tags = "games", responses = {
+            @ApiResponse(responseCode = "200", description = "Game encontrado"),
+            @ApiResponse(responseCode = "404", description = "Game não encontrado")
+    })
     @GetMapping("{id}")
     public Game get(Long id) {
         log.info("Buscando game: " + id);
         return getGame(id);
     }
 
+    @Operation(summary = "Deleta um game pelo ID", description = "Remove um game com o ID informado", tags = "games", responses = {
+            @ApiResponse(responseCode = "204", description = "Game removido com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Game não encontrado")
+    })
     @DeleteMapping("{id}")
     @CacheEvict(value = "games", allEntries = true)
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -74,6 +83,10 @@ public class GameController {
         repository.delete(getGame(id));
     }
 
+    @Operation(summary = "Atualiza um game pelo ID", description = "Atualiza um game com o ID informado", tags = "games", responses = {
+            @ApiResponse(responseCode = "200", description = "Game atualizado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Game não encontrado")
+    })
     @PutMapping("{id}")
     @CacheEvict(value = "games", allEntries = true)
     public Game update(@PathVariable Long id, @RequestBody @Valid Game game) {

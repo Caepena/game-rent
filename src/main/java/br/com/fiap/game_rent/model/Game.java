@@ -8,7 +8,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,10 +31,11 @@ public class Game {
     private String name;
 
     @ManyToOne
-    @NotBlank(message = "Campo obrigatório")
+    @NotNull(message = "Campo obrigatório")
     private Category category;
 
     @NotBlank(message = "Campo obrigatório")
+    @Size(max = 100, message = "Máximo de 100 caracteres")
     private String description;
 
     @Positive(message = "Valor deve ser positivo")
