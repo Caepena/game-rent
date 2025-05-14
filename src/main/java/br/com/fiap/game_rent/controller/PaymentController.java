@@ -39,33 +39,33 @@ public class PaymentController {
 
     @Autowired
     private PaymentsRepository repository;
-    
+
     @GetMapping
     @Cacheable("payments")
     @Operation(description = "Lista todos os pagamentos", tags = "payments", summary = "List all payments")
     public Page<Payments> index(PaymentFilter filter,
-            @PageableDefault(size = 10, sort = "game", direction = Direction.DESC) Pageable pageable) {
+            @PageableDefault(size = 10, sort = "id", direction = Direction.DESC) Pageable pageable) {
         var specification = PaymentSpecification.withFilters(filter);
         return repository.findAll(specification, pageable);
-        
+
     }
 
     @PostMapping
     @CacheEvict(value = "payments", allEntries = true)
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(responses = {
-        @ApiResponse(responseCode = "400", description = "Invalid payment data"),
-        @ApiResponse(responseCode = "201", description = "Payment created successfully")
+            @ApiResponse(responseCode = "400", description = "Invalid payment data"),
+            @ApiResponse(responseCode = "201", description = "Payment created successfully")
     })
-    public Payments create (@RequestBody @Valid Payments payment) {
+    public Payments create(@RequestBody @Valid Payments payment) {
         log.info("Criando pagamento: " + payment.getId());
         return repository.save(payment);
     }
 
     @GetMapping("{id}")
     @Operation(description = "Busca um pagamento pelo ID", tags = "payments", summary = "Get payment by ID", responses = {
-        @ApiResponse(responseCode = "200", description = "Payment found"),
-        @ApiResponse(responseCode = "404", description = "Payment not found")
+            @ApiResponse(responseCode = "200", description = "Payment found"),
+            @ApiResponse(responseCode = "404", description = "Payment not found")
     })
     public Payments get(Long id) {
         log.info("Buscando pagamento: " + id);
@@ -76,8 +76,8 @@ public class PaymentController {
     @CacheEvict(value = "payments", allEntries = true)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(description = "Deleta um pagamento pelo ID", tags = "payments", summary = "Delete payment by ID", responses = {
-        @ApiResponse(responseCode = "204", description = "Payment deleted"),
-        @ApiResponse(responseCode = "404", description = "Payment not found")
+            @ApiResponse(responseCode = "204", description = "Payment deleted"),
+            @ApiResponse(responseCode = "404", description = "Payment not found")
     })
     public void delete(@PathVariable Long id) {
         log.info("Deletando pagamento: " + id);
@@ -87,12 +87,12 @@ public class PaymentController {
     @PutMapping("{id}")
     @CacheEvict(value = "payments", allEntries = true)
     @Operation(description = "Atualiza um pagamento pelo ID", tags = "payments", summary = "Update payment by ID", responses = {
-        @ApiResponse(responseCode = "200", description = "Payment updated"),
-        @ApiResponse(responseCode = "404", description = "Payment not found")
+            @ApiResponse(responseCode = "200", description = "Payment updated"),
+            @ApiResponse(responseCode = "404", description = "Payment not found")
     })
     public Payments update(@PathVariable Long id, Payments payment) {
         log.info("Atualizando pagamento: " + id);
-        
+
         getPayment(id);
         payment.setId(id);
         return repository.save(payment);
