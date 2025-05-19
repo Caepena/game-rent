@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>br.com.fiap</groupId>
-	<artifactId>cash-up-api</artifactId>
+	<artifactId>game-rent-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>cash-up-api</name>
-	<description>API do SaaS CashUp - controle de finanças pessoais</description>
+	<name>game-rent-api</name>
+	<description>API do SaaS GameRent - controle de finanças pessoais</description>
 	<url/>
 	<licenses>
 		<license/>
