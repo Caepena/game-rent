@@ -23,7 +23,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Game {
 
-    @Id 
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -35,7 +35,7 @@ public class Game {
     private Category category;
 
     @NotBlank(message = "Campo obrigatório")
-    @Size(max = 100, message = "Máximo de 100 caracteres")
+    @Size(max = 200, message = "Máximo de 200 caracteres")
     private String description;
 
     @Positive(message = "Valor deve ser positivo")
